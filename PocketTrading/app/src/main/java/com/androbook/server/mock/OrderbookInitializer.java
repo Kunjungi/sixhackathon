@@ -2,6 +2,7 @@ package com.androbook.server.mock;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import com.androbook.server.api.IOrder;
 import com.androbook.server.api.IOrderbook;
@@ -16,9 +17,21 @@ public class OrderbookInitializer {
     public IOrderbook initializeBook(int bookId, String currency) {
         Orderbook book = new Orderbook(bookId, _bookIdNameMap.get(new Integer(bookId)), currency);
 
-        int price = 10000;//centimes
-        int size = 250;
-        IOrder order1 = new Order();
+
+        Random r = new Random();
+        int refPrice = 5000+ r.nextInt(20000);
+        book.setReferencePrice(refPrice);
+        int no = 6+new Random().nextInt(6);
+        for (int i =0; i< no; i++) {
+            IOrder o  = new Order();
+            int price = 5000 +r.nextInt(20000);
+            o.price(price);
+            o.size(1200 +r.nextInt(2000));
+            o.buySellFlag(refPrice < price ? OrderType.SELL: OrderType.BUY);
+            book.addOrder(o);
+        }
+
+        /*
         //BUY
         book.addOrder(order1.buySellFlag(OrderType.BUY).size(size).price(price));
         IOrder order2 = new Order();
@@ -39,15 +52,18 @@ public class OrderbookInitializer {
         IOrder order6 = new Order();
         order6.size(200).price(order5.price() + 200).buySellFlag(OrderType.SELL);
         book.addOrder(order6);
+        */
+
+
         return book;
     }
 
     public OrderbookInitializer() {
-        _bookIdNameMap.put(new Integer(1), "NESTLE");
-        _bookIdNameMap.put(new Integer(2), "SWISSCOM");
-        _bookIdNameMap.put(new Integer(3), "HOLCIM");
-        _bookIdNameMap.put(new Integer(4), "SWATCH");
-        _bookIdNameMap.put(new Integer(5), "NOVARTIS");
+        _bookIdNameMap.put(new Integer(0), "NESTLE");
+        _bookIdNameMap.put(new Integer(1), "SWISSCOM");
+        _bookIdNameMap.put(new Integer(2), "HOLCIM");
+        _bookIdNameMap.put(new Integer(3), "SWATCH");
+        _bookIdNameMap.put(new Integer(4), "NOVARTIS");
     }
 
 }

@@ -21,9 +21,9 @@ public class EngineMock implements ITradingEngine {
 
     private OrderbookInitializer _initializer = new OrderbookInitializer();
 
-
+ public int noBooks = 5;
     public EngineMock() {
-        for (int bookId = 1; bookId < 6; bookId++) {
+        for (int bookId = 0; bookId < noBooks; bookId++) {
             books.add(_initializer.initializeBook(bookId, "CHF"));
         }
     }

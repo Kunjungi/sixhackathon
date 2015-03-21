@@ -52,7 +52,7 @@ public class OrderActivity extends ActionBarActivity {
     private Button sellButton;
     private EditText editPrice;
     private EditText editAmount;
-    private int bookId = 1;
+    private int bookId = 0;
     private OrderClient client;
     private IOrderbook book;
     private TableRow.LayoutParams lpCell;
@@ -132,6 +132,36 @@ public class OrderActivity extends ActionBarActivity {
 
         setContentView(linear);
 
+
+        ll.setOnTouchListener(new OnSwipeTouchListener(this) {
+            public void onSwipeRight() {
+                if (bookId < engine.noBooks) {
+                    bookId++;
+                } else {
+                    bookId = 0;
+                }
+
+                book = getSnapshot(client, bookId);
+                renderOrderPage(null);
+            }
+
+            public void onSwipeLeft() {
+                if (bookId >= 1) {
+                    bookId--;
+                } else {
+                    bookId = engine.noBooks-1;
+                }
+                book = getSnapshot(client, bookId);
+                renderOrderPage(null);
+            }
+
+            public void onSwipeTop() {
+            }
+
+            public void onSwipeBottom() {
+            }
+
+        });
     }
 
     private RelativeLayout addOrderForm() {
@@ -149,7 +179,7 @@ public class OrderActivity extends ActionBarActivity {
         bottom.setLayoutParams(lpBottom);
         LinearLayout orderRow = new LinearLayout(this);
 
-        LinearLayout.LayoutParams orderRowParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams orderRowParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         orderRow.setLayoutParams(orderRowParam);
         orderRow.setOrientation(LinearLayout.HORIZONTAL);
         orderRow.setWeightSum(4);
@@ -207,10 +237,10 @@ public class OrderActivity extends ActionBarActivity {
         allList.addAll(buyList);
         Collections.sort(allList, Orderbook.OrderComparator);
 
-        for(int i = 0; i < allList.size(); i++) {
+        for (int i = 0; i < allList.size(); i++) {
             IOrder o = allList.get(i);
 
-            if(o.buySellFlag() == OrderType.SELL) {
+            if (o.buySellFlag() == OrderType.SELL) {
                 TableRow tbrow = new TableRow(this);
 
                 tbrow.setBackgroundColor(Color.BLACK);
@@ -241,8 +271,7 @@ public class OrderActivity extends ActionBarActivity {
                 tbrow.addView(emptyRow());
                 tbrow.addView(emptyRow());
                 ll.addView(tbrow);
-            }
-            else {
+            } else {
                 //Log.v("my", "buy:" + i + o.size());
                 TableRow tbrow = new TableRow(this);
 
@@ -338,7 +367,6 @@ public class OrderActivity extends ActionBarActivity {
         }
 
     }
-
 
 
 }
